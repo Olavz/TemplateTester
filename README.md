@@ -19,7 +19,7 @@ Install the Html Publisher Plugin if not already installed. This enables a neat 
 https://wiki.jenkins-ci.org/display/JENKINS/HTML+Publisher+Plugin
 
 #### Example Jenkins 2.0 - Pipeline
-``
+```
 node {
     stage('Run tests') {
         sh "mvn -Dmaven.test.failure.ignore clean test"
@@ -28,7 +28,7 @@ node {
         publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: true, reportDir: 'target/test-classes', reportFiles: 'template-test-report.html', reportName: 'Test results'])
     }
 }
-``
+```
 
 #### Disable Security restrictions
 
