@@ -35,9 +35,9 @@ public class Report {
     private String getStatusImage(boolean hasFailed) {
         String source;
         if(hasFailed) {
-            source = "test-classes/img/failure.png";
+            source = "img/failure.png";
         } else {
-            source = "test-classes/img/success.png";
+            source = "img/success.png";
         }
         return "<img src=\""+source+"\" />";
     }

@@ -32,7 +32,7 @@ public class ReportUtil {
         template = template.replace("{{content}}", input);
 
         List<String> lines = Arrays.asList(template);
-        Path file = Paths.get("target/template-test-report.html");
+        Path file = Paths.get("target/test-classes/template-test-report.html");
         Files.write(file, lines, Charset.forName("UTF-8"));
     }
 
