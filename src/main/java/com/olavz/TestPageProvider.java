@@ -38,7 +38,7 @@ public class TestPageProvider {
 
         List<TestPage> testPages = new ArrayList<>();
 
-        Iterator iterator = jsonObject.getJsonArray("randomUrls").iterator();
+        Iterator iterator = jsonObject.getJsonArray("testPages").iterator();
         while(iterator.hasNext()) {
             JsonObject jo = (JsonObject) iterator.next();
             TestPage testPage = new TestPage();
@@ -48,6 +48,11 @@ public class TestPageProvider {
         }
 
         return testPages;
+    }
+
+    public static List<TestPage> getTestPagesFromFile(String path) {
+
+        return null;
     }
 
 

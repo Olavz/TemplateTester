@@ -17,14 +17,14 @@ The current implementation allows the test pages to be provided from an external
 The TestPageProvider.getTestPagesFromUrl(String url) builds a list of TestPage objects where the provided URL produces the following JSON data:
 ```
 {
-	randomUrls: [
+	"testPages": [
 		{
-			name: "Page: 47617",
-			url: "http://www.example.com/47617/"
+			"name": "Page: 47617",
+			"url": "http://www.example.com/47617/"
 		},
 		{
-			name: "Page: 57925",
-			url: "http://www.exampleccom/57925/"
+			"name": "Page: 57925",
+			"url": "http://www.exampleccom/57925/"
 		}
 	]
 }
