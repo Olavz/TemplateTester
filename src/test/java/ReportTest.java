@@ -1,9 +1,8 @@
-import com.olavz.*;
+import com.olavz.TestPage;
+import com.olavz.TestPageProvider;
+import com.olavz.TestProfile;
 import com.olavz.report.Report;
 import com.olavz.report.ReportUtil;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -12,55 +11,12 @@ import java.util.List;
 public class ReportTest {
 
     @Test
-    public void testEasy() {
-        // Declaring and initialising the HtmlUnitWebDriver
-        HtmlUnitDriver unitDriver = new HtmlUnitDriver();
-
-        // open google.com webpage
-        unitDriver.get("http://javatest.olavz.com/templates/page1.html");
-
-        // find the search edit box on the google page
-        WebElement searchBox = unitDriver.findElement(By.className("hello"));
-
-        WebElement searchBox2 = unitDriver.findElement(By.id("world"));
-
-    }
-
-
-    @Test
-    public void findElement() {
-        // Declaring and initialising the HtmlUnitWebDriver
-        HtmlUnitDriver htmlUnitDriver = new HtmlUnitDriver();
-        htmlUnitDriver.get("http://javatest.olavz.com/templates/page1.html");
-
-        List<WebElement> test = FindElement.find(htmlUnitDriver, "#myList");
-
-        List<WebElement> test2 = FindElement.find(htmlUnitDriver, ".liElement");
-    }
-
-    @Test
-    public void tt() {
-        ReportUtil.getBasicTemplate();
-    }
-
-    @Test
-    public void makeTestProfile() {
-        TestProfile tp = new TestProfile();
-        tp.setTitle("Tests");
-
-        // Add criterias to profiles
-        tp.addTestCriteria("1001", ".liElement", true, "Check for .liElement");
-        tp.addTestCriteria("1002", ".b", true, "Check for bold text created by JavaScript");
-        tp.addTestCriteria("1003", "#myList", true, "Check for attribute data-tag=\"yes\"", TestCriteria.ElementType.NOT_APPLICABLE, "data-tag", "yes");
-
-        // Add test pages from url provider.
-        List<TestPage> testPages = TestPageProvider.getTestPagesFromUrl("http://javatest.olavz.com/templates/urlProvider.php");
-        tp.addTestPages(testPages);
-
-        tp.runTest(); // Run the tests
-
+    public void makeReportFromTestProfiles() {
         Report report = new Report();
-        report.addTestProfile(tp);
+
+        // Add test profiles to the report.
+        report.addTestProfile(getTicketsTestProfile());
+        report.addTestProfile(getNewsTestProfile());
 
         String htmlReport = report.processReportAndProduceOutcome();
         try {
@@ -72,47 +28,45 @@ public class ReportTest {
         Assert.assertEquals(report.hasFailure(), false);
     }
 
-    @Test
-    public void CheckTestCase1() {
-        // Declaring and initialising the HtmlUnitWebDriver
-        HtmlUnitDriver htmlUnitDriver = new HtmlUnitDriver();
-        htmlUnitDriver.get("http://javatest.olavz.com/templates/page1.html");
+    private TestProfile getTicketsTestProfile() {
+        TestProfile tp = new TestProfile();
+        tp.setTitle("Tickets");
 
-        TestCriteria tc = new TestCriteria();
-        tc.setReference("1001");
-        tc.setDescription("First testcase");
-        tc.setElementSelector(".liElement");
-        tc.setRequired(true);
-        tc.setElementType(TestCriteria.ElementType.NOT_APPLICABLE);
+        tp.addTestCriteria("Ref 1", "#order-number", true, "All tickets should have ordernumber.");
+        tp.addTestCriteria("Ref 2", ".tdName", true, "All tickets should have at least one name.");
+        tp.addTestCriteria("Ref 3", "#other-remarks", false, "Tickets can have remarks, but not required.");
+        tp.addTestCriteria("Ref 3.1", ".remark-beer", false, "If the ticket have a beer remark, it should have a beer icon.",
+                "", "icon", "beer.png");
+        tp.addTestCriteria("Ref 3.2", ".remark-group-discount", false, "If ticket have group discount, it should be a text.",
+                "text");
+        tp.addTestCriteria("Ref 3.3", ".remark-number", false, "If ticket have a number remark, the content should be numeric.",
+                "number");
+        tp.addTestCriteria("Ref 4", ".tdAmount", true, "Check that amount is correct. [0-9] [NOK|EURO]", "[0-9] [NOK|EURO]");
 
-        TestCriteria result = ProduceTest.produceTest(tc, htmlUnitDriver);
+
+        List<TestPage> testPages = TestPageProvider.getTestPagesFromFile("src/test/resources/insanity-tests/tickets/fileProvider.json");
+        tp.addTestPages(testPages);
+
+        tp.runTest();
+        return tp;
     }
 
-    @Test
-    public void CheckTestCase2() {
-        // Declaring and initialising the HtmlUnitWebDriver
-        HtmlUnitDriver htmlUnitDriver = new HtmlUnitDriver();
-        htmlUnitDriver.get("http://javatest.olavz.com/templates/page1.html");
+    private TestProfile getNewsTestProfile() {
 
-        TestCriteria tc = new TestCriteria();
-        tc.setReference("1002");
-        tc.setDescription("Second testcase");
-        tc.setElementSelector("#myList");
-        tc.setRequired(true);
-        tc.setElementType(TestCriteria.ElementType.NOT_APPLICABLE);
-        tc.setAttributeSelector("data-tag");
-        tc.setAttributeValue("yes");
+        // TODO: Complete this example profile.
 
-        TestCriteria tc2 = new TestCriteria();
-        tc2.setReference("1001");
-        tc2.setDescription("First testcase");
-        tc2.setElementSelector(".liElement");
-        tc2.setRequired(true);
-        tc2.setElementType(TestCriteria.ElementType.NOT_APPLICABLE);
+        TestProfile tp = new TestProfile();
+        tp.setTitle("Check imported news articles");
 
-        TestCriteria result = ProduceTest.produceTest(tc, htmlUnitDriver);
-        TestCriteria result2 = ProduceTest.produceTest(tc2, htmlUnitDriver);
+        tp.addTestCriteria("First article", ".test", false, "Empty test");
+
+        List<TestPage> testPages = TestPageProvider.getTestPagesFromFile("src/test/resources/insanity-tests/news/fileProvider.json");
+        tp.addTestPages(testPages);
+
+        tp.runTest();
+        return tp;
     }
+
 
 
 }

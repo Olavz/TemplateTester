@@ -8,16 +8,12 @@ public class TestCriteria implements Cloneable {
     private String reference = "1001";
     private boolean isRequired = true;
     private String elementSelector = "";
-    private ElementType elementType = ElementType.NOT_APPLICABLE;
+    private String contentValidation = "";
     private String attributeSelector = null;
     private String attributeValue = null;
     private String description = "";
     List<HashMap<String, String>> listMultipleElementResults;
     private boolean hasFailed = false;
-
-    public enum ElementType {
-        TEXT, NUMBER, NOT_APPLICABLE
-    }
 
     public String getReference() {
         return reference;
@@ -74,12 +70,12 @@ public class TestCriteria implements Cloneable {
         this.description = description;
     }
 
-    public ElementType getElementType() {
-        return elementType;
+    public String getContentValidation() {
+        return contentValidation;
     }
 
-    public void setElementType(ElementType elementType) {
-        this.elementType = elementType;
+    public void setContentValidation(String contentValidation) {
+        this.contentValidation = contentValidation;
     }
 
     public List<HashMap<String, String>> getListMultipleElementResults() {

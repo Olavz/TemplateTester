@@ -1,0 +1,16 @@
+{
+  "testPages": [
+    {
+      "name": "ticket1.html",
+      "url": "file:./target/test-classes/insanity-tests/tickets/pages/ticket1.html"
+    },
+    {
+      "name": "ticket2.html",
+      "url": "file:./target/test-classes/insanity-tests/tickets/pages/ticket2.html"
+    },
+    {
+      "name": "ticket3.html",
+      "url": "file:./target/test-classes/insanity-tests/tickets/pages/ticket3.html"
+    }
+  ]
+}

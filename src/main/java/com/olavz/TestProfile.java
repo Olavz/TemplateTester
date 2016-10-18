@@ -81,24 +81,24 @@ public class TestProfile {
     }
 
     public void addTestCriteria(String reference, String elementSelector, boolean elementRequired, String description,
-                                TestCriteria.ElementType contentValidation) {
+                                String contentValidation) {
         TestCriteria tc = new TestCriteria();
         tc.setReference(reference);
         tc.setElementSelector(elementSelector);
         tc.setRequired(elementRequired);
         tc.setDescription(description);
-        tc.setElementType(contentValidation);
+        tc.setContentValidation(contentValidation);
         testCriterias.add(tc);
     }
 
     public void addTestCriteria(String reference, String elementSelector, boolean elementRequired, String description,
-                                TestCriteria.ElementType contentValidation, String attributeSelector, String attributeValue ) {
+                                String contentValidation, String attributeSelector, String attributeValue ) {
         TestCriteria tc = new TestCriteria();
         tc.setReference(reference);
         tc.setElementSelector(elementSelector);
         tc.setRequired(elementRequired);
         tc.setDescription(description);
-        tc.setElementType(contentValidation);
+        tc.setContentValidation(contentValidation);
         tc.setAttributeSelector(attributeSelector);
         tc.setAttributeValue(attributeValue);
         testCriterias.add(tc);

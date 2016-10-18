@@ -41,6 +41,14 @@ public class Report {
         }
         return "<img src=\""+source+"\" />";
     }
+    private String getStatusImage(String status) {
+        if(status.equalsIgnoreCase("SUCCESS")) {
+            return getStatusImage(false);
+        } else {
+            return getStatusImage(true);
+        }
+    }
+
 
     public String processReportAndProduceOutcome() {
         StringBuilder sb = new StringBuilder();
@@ -63,15 +71,22 @@ public class Report {
                             "</div>");
 
                     sb.append("<div class=\"test-criteria\">");
-                    for (HashMap<String, String> singleElement : testCriteria.getListMultipleElementResults()) {
-                        for (HashMap.Entry<String, String> entry : singleElement.entrySet()) {
-                            String key = entry.getKey();
-                            String value = entry.getValue();
-                            sb.append("<div class=\"row\">" +
-                                    "<div class=\"col-sm-5 offset-sm-3\">" + key + "</div><div col-sm-4>"+value+"</div>" +
-                                    "</div>");
+                    if(testCriteria.getListMultipleElementResults().isEmpty()) {
+                        sb.append("<div class=\"row\">" +
+                                "<div class=\"col-sm-9 offset-sm-3\">No results. Not required?</div>" +
+                                "</div>");
+                    } else {
+                        for (HashMap<String, String> singleElement : testCriteria.getListMultipleElementResults()) {
+                            for (HashMap.Entry<String, String> entry : singleElement.entrySet()) {
+                                String key = entry.getKey();
+                                String value = entry.getValue();
+                                sb.append("<div class=\"row\">" +
+                                        "<div class=\"col-sm-2 offset-sm-3\">" + getStatusImage(value) + "</div><div col-sm-7>" + key + "</div>" +
+                                        "</div>");
+                            }
                         }
                     }
+
                     sb.append("</div>");
                     sb.append("</div>");
                 }

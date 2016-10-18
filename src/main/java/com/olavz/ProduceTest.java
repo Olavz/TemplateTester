@@ -7,6 +7,8 @@ import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 public class ProduceTest {
@@ -22,32 +24,42 @@ public class ProduceTest {
 
         // A test criteria may find multiple elements, thus we need to validate all the matched elements.
         List<WebElement> elementList = FindElement.find(htmlUnitDriver, testCriteria.getElementSelector());
-        HashMap<String, String> reportResultMap = new HashMap<>();
         boolean testHasFailure = false;
 
         if(elementList != null) {
-            int counter = 0;
             for(WebElement element : elementList) {
-                counter++;
+                HashMap<String, String> reportResultMap = new HashMap<>();
                 // For multiple entries, we get multiple results.
                 // Step 1: Validate element type
                 boolean validElementType = false;
-                if(testCriteria.getElementType() == TestCriteria.ElementType.NOT_APPLICABLE) {
+                if(testCriteria.getContentValidation().equals("")) {
                     validElementType = true; // Valid as no validation is required.
-                } else if(testCriteria.getElementType() == TestCriteria.ElementType.TEXT) {
+                } else if(testCriteria.getContentValidation().equalsIgnoreCase("TEXT")) {
                     validElementType = isText(element.getText());
                     if(validElementType) {
-                        reportResultMap.put("ELEMENT_VALIDATE_TEXT_" + counter, "SUCCESS");
+                        reportResultMap.put("ELEMENT_VALIDATE_TEXT", "SUCCESS");
                     } else {
-                        reportResultMap.put("ELEMENT_VALIDATE_TEXT_" + counter, "FAILURE");
+                        reportResultMap.put("ELEMENT_VALIDATE_TEXT", "FAILURE");
                         testHasFailure = true;
                     }
-                } else if(testCriteria.getElementType() == TestCriteria.ElementType.NUMBER) {
+                } else if(testCriteria.getContentValidation().equalsIgnoreCase("NUMBER") ||
+                        testCriteria.getContentValidation().equalsIgnoreCase("NUMERIC")) {
                     validElementType = isNumeric(element.getText());
                     if(validElementType) {
-                        reportResultMap.put("ELEMENT_VALIDATE_NUMBER_" + counter, "SUCCESS");
+                        reportResultMap.put("ELEMENT_VALIDATE_NUMBER", "SUCCESS");
                     } else {
-                        reportResultMap.put("ELEMENT_VALIDATE_NUMBER_" + counter, "FAILURE");
+                        reportResultMap.put("ELEMENT_VALIDATE_NUMBER", "FAILURE");
+                        testHasFailure = true;
+                    }
+                } else {
+                    // Try to apply content validation as regex.
+                    String p = element.getText();
+                    Pattern pattern = Pattern.compile(testCriteria.getContentValidation(), Pattern.DOTALL);
+                    Matcher matcher = pattern.matcher(element.getText());
+                    if(matcher.find()) {
+                        reportResultMap.put("ELEMENT_CONTENT_VALIDATION_REGEX", "SUCCESS");
+                    } else {
+                        reportResultMap.put("ELEMENT_CONTENT_VALIDATION_REGEX", "FAILURE");
                         testHasFailure = true;
                     }
                 }
@@ -58,15 +70,15 @@ public class ProduceTest {
                     if(attributeValue != null) {
                         if(attributeValue.equals(testCriteria.getAttributeValue())) {
                             // attribute validation success. Matched attribute value.
-                            reportResultMap.put("ATTRIBUTE_VALIDATION_" + counter, "SUCCESS");
+                            reportResultMap.put("ATTRIBUTE_VALIDATION", "SUCCESS");
                         } else {
                             // attribute validation failed. Could not match attribute value.
-                            reportResultMap.put("ATTRIBUTE_VALIDATION_MISS_MATCH_" + counter, "FAILURE");
+                            reportResultMap.put("ATTRIBUTE_VALIDATION_MISS_MATCH", "FAILURE");
                             testHasFailure = true;
                         }
                     } else {
                         // attribute validation failed. Attribute not found.
-                        reportResultMap.put("ATTRIBUTE_VALIDATION_NO_ATTRIBUTE_" + counter, "FAILURE");
+                        reportResultMap.put("ATTRIBUTE_VALIDATION_NO_ATTRIBUTE", "FAILURE");
                         testHasFailure = true;
                     }
                 }
@@ -75,11 +87,18 @@ public class ProduceTest {
 
             if(elementList.size() == 0 && testCriteria.isRequired()) {
                 // Error: No element found, but is required.
-                reportResultMap.put("ELEMENT_REQUIRED", "FAILURE");
+                HashMap<String, String> elmRequiredMap = new HashMap<>();
+                elmRequiredMap.put("ELEMENT_REQUIRED", "FAILURE");
+                listMultipleElements.add(elmRequiredMap);
                 testHasFailure = true;
-                listMultipleElements.add(reportResultMap);
             } else if (elementList.size() > 0 && testCriteria.isRequired()) {
-                reportResultMap.put("ELEMENT_REQUIRED", "SUCCESS");
+                HashMap<String, String> elmRequiredMap = new HashMap<>();
+                elmRequiredMap.put("ELEMENT_REQUIRED", "SUCCESS");
+                listMultipleElements.add(elmRequiredMap);
+            } else if(elementList.size() > 0 && !testCriteria.isRequired()) {
+                HashMap<String, String> elmRequiredMap = new HashMap<>();
+                elmRequiredMap.put("ELEMENT_NOT_REQUIRED_BUT_FOUND", "SUCCESS");
+                listMultipleElements.add(elmRequiredMap);
             }
 
             // Flag the overall process. If any failure detected, it should be flagged so.

@@ -1,0 +1,16 @@
+{
+  "testPages": [
+    {
+      "name": "Article about Clean Code",
+      "url": "file:./target/test-classes/insanity-tests/news/pages/article1.html"
+    },
+    {
+      "name": "Why we aim for the cloud",
+      "url": "file:./target/test-classes/insanity-tests/news/pages/article2.html"
+    },
+    {
+      "name": "Template testing to keep insanity in check",
+      "url": "file:./target/test-classes/insanity-tests/news/pages/article3.html"
+    }
+  ]
+}

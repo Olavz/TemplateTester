@@ -4,6 +4,7 @@ import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonObject;
 import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
@@ -39,7 +40,7 @@ public class TestPageProvider {
         List<TestPage> testPages = new ArrayList<>();
 
         Iterator iterator = jsonObject.getJsonArray("testPages").iterator();
-        while(iterator.hasNext()) {
+        while (iterator.hasNext()) {
             JsonObject jo = (JsonObject) iterator.next();
             TestPage testPage = new TestPage();
             testPage.setDescription(jo.getString("name"));
@@ -50,11 +51,36 @@ public class TestPageProvider {
         return testPages;
     }
 
-    public static List<TestPage> getTestPagesFromFile(String path) {
-
+    public static JsonObject getJsonObjectFromPath(String path) {
+        try (BufferedReader br = new BufferedReader(new FileReader(path))) {
+            return Json.createReader(br).readObject();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return null;
     }
 
+    public static List<TestPage> getTestPagesFromFile(String path) {
+        JsonObject jsonObject = null;
+        try {
+            jsonObject = getJsonObjectFromPath(path);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        List<TestPage> testPages = new ArrayList<>();
+
+        Iterator iterator = jsonObject.getJsonArray("testPages").iterator();
+        while (iterator.hasNext()) {
+            JsonObject jo = (JsonObject) iterator.next();
+            TestPage testPage = new TestPage();
+            testPage.setDescription(jo.getString("name"));
+            testPage.setUrl(jo.getString("url"));
+            testPages.add(testPage);
+        }
+
+        return testPages;
+    }
 
 
 }
