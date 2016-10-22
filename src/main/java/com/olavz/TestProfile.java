@@ -14,6 +14,8 @@ public class TestProfile {
     private String title = "";
     private List<TestCriteria> testCriterias;
     private boolean testProfileHasFailure = false;
+    private String dataProviderPath;
+    private String dataProviderUrl;
 
     HtmlUnitDriver htmlUnitDriver;
     private List<TestPage> testPages;
@@ -127,5 +129,21 @@ public class TestProfile {
 
     public void setFailure(boolean testProfileHasFailure) {
         this.testProfileHasFailure = testProfileHasFailure;
+    }
+
+    public String getDataProviderPath() {
+        return dataProviderPath;
+    }
+
+    public void setDataProviderPath(String dataProviderPath) {
+        this.dataProviderPath = dataProviderPath;
+    }
+
+    public String getDataProviderUrl() {
+        return dataProviderUrl;
+    }
+
+    public void setDataProviderUrl(String dataProviderUrl) {
+        this.dataProviderUrl = dataProviderUrl;
     }
 }

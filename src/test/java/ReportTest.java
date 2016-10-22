@@ -1,6 +1,7 @@
 import com.olavz.TestPage;
 import com.olavz.TestPageProvider;
 import com.olavz.TestProfile;
+import com.olavz.profileFactory.CreateTestProfile;
 import com.olavz.report.Report;
 import com.olavz.report.ReportUtil;
 import org.testng.Assert;
@@ -16,7 +17,6 @@ public class ReportTest {
 
         // Add test profiles to the report.
         report.addTestProfile(getTicketsTestProfile());
-        report.addTestProfile(getNewsTestProfile());
 
         String htmlReport = report.processReportAndProduceOutcome();
         try {
@@ -51,22 +51,11 @@ public class ReportTest {
         return tp;
     }
 
-    private TestProfile getNewsTestProfile() {
+    @Test
+    public void testYaml() throws Exception {
 
-        // TODO: Complete this example profile.
+        TestProfile tp = CreateTestProfile.fromYaml("src/test/resources/insanity-tests/tickets/test-criteria-profile.yaml");
 
-        TestProfile tp = new TestProfile();
-        tp.setTitle("Check imported news articles");
-
-        tp.addTestCriteria("First article", ".test", false, "Empty test");
-
-        List<TestPage> testPages = TestPageProvider.getTestPagesFromFile("src/test/resources/insanity-tests/news/fileProvider.json");
-        tp.addTestPages(testPages);
-
-        tp.runTest();
-        return tp;
     }
-
-
 
 }

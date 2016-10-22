@@ -1,0 +1,21 @@
+title: News article validation
+dataProviderPath: src/test/resources/insanity-tests/news/fileProvider.json
+testCriterias:
+  - testcase: t1
+    elementSelector: test
+    elementRequired: false
+    description: This is a old test
+
+  - testcase: t2
+    elementSelector: "#test"
+    elementRequired: false
+    description: This is a test
+
+  - testcase: t3
+    elementSelector: .test
+    elementRequired: false
+    contentValidation: number
+    attributeSelector: src
+    attributeValue: logo.png
+    description: This is a test
+
